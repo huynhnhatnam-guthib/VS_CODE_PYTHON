@@ -3,19 +3,19 @@ import pandas as pd
 import sys
 
 # --- VISUAL THEME & COLORS ---
-COLOR_BG = (30, 32, 38)          # Dark Charcoal
-COLOR_PANEL = (40, 44, 52)       # Slate Gray
-COLOR_ROBOT = (0, 210, 255)      # Cyan Neon
-COLOR_INBOUND = (152, 195, 121)  # Soft Green
-COLOR_TEXT = (220, 223, 228)     # Off White
-COLOR_ACCENT = (198, 120, 221)   # Purple Accent
+COLOR_BG = (30, 32, 38)          
+COLOR_PANEL = (40, 44, 52)      
+COLOR_ROBOT = (0, 210, 255)     
+COLOR_INBOUND = (152, 195, 121) 
+COLOR_TEXT = (220, 223, 228)    
+COLOR_ACCENT = (198, 120, 221)   
 
 # Category-specific shelf colors
 SHELF_COLORS = {
-    "Electronics": (224, 108, 117),    # Soft Red
-    "Furniture": (229, 192, 123),      # Soft Yellow/Orange
-    "Food and Drink": (97, 175, 239),  # Soft Blue
-    "Consumables": (86, 182, 194)      # Teal
+    "Electronics": (224, 108, 117),    
+    "Furniture": (229, 192, 123),      
+    "Food and Drink": (97, 175, 239), 
+    "Consumables": (86, 182, 194)      
 }
 
 # --- DIMENSIONS ---
