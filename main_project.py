@@ -1,106 +1,233 @@
 import pygame
 import pandas as pd
 import sys
-import time
+import math
+import random
 
-# --- GRAPHICS SETUP ---
-pygame.init()
-WIDTH, HEIGHT = 1000, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("AUTOMATED GOODS SORTING ROBOT")
-clock = pygame.time.Clock()
-font = pygame.font.SysFont("Arial", 18)
-
-# Colors
-WHITE = (255, 255, 255)
-ROBOT_COLOR = (255, 0, 0)
-SHELF_COLOR = (70, 70, 70)
-INBOUND_POS = (100, 300)
-
-# Automated shelf coordinates by category
-SHELF_LOCATIONS = {
-    "Electronics": (800, 50),
-    "Monitors": (800, 140),
-    "Kitchenware": (800, 230),
-    "Dried Food": (800, 320),
-    "Beverages": (800, 410),
-    "Adhesives": (800, 500)
+# --- CONFIGURATION & COLORS ---
+COLORS = {
+    "bg": (12, 14, 18),
+    "grid": (25, 28, 35),
+    "panel": (32, 35, 45),
+    "accent": (0, 255, 220),
+    "sorter": (255, 60, 60),
+    "deliverer": (255, 215, 0),
+    "inbound": (50, 255, 100),
+    "gate": (180, 70, 255),
+    "shelf_frame": (60, 65, 80),
+    "money": (255, 215, 0),
+    "text": (220, 225, 230),
+    "bay_wall": (50, 55, 70)
 }
 
-# --- ROBOT CLASS ---
+# --- 1. PYGAME THẤP LẠI (NGANG CHUẨN) ---
+WIDTH, HEIGHT = 1600, 800 
+
+POS_INBOUND = (150, 220) 
+POS_GATE = (150, 500)    
+SHELF_X = 1250 
+
+# --- 2. TỌA ĐỘ NGHỈ (KHỚP VỚI HỘC SẠC) ---
+POS_REST_SORTER = (500, 675)   
+POS_REST_DELIVERER = (720, 675) 
+
+# Căn chỉnh kệ hàng để không bị bảng Log che
+SHELF_MAP = {
+    "Electronics": 100, 
+    "Furniture": 215, 
+    "Food and Drink": 330,
+    "Consumables": 445, 
+    "Damaged items": 560  # Kết thúc tại Y=660
+}
+
 class Robot:
-    def __init__(self, x, y):
+    def __init__(self, x, y, color, speed, name):
         self.pos = pygame.Vector2(x, y)
         self.target = pygame.Vector2(x, y)
-        self.speed = 7
-        self.carrying = None
-        self.state = "GET_TASK" # GET_TASK -> TO_INBOUND -> TO_SHELF
+        self.speed = speed
+        self.color = color
+        self.name = name
+        self.payload = None
+        self.state = "IDLE"
+        self.angle = 0
 
-def run_simulation():
-    # Read load.csv file
+    def move(self):
+        distance = self.target - self.pos
+        if distance.length() > self.speed:
+            desired_angle = math.degrees(math.atan2(-distance.y, distance.x))
+            self.angle += (desired_angle - self.angle) * 0.1
+            self.pos += distance.normalize() * self.speed
+            return False
+        self.pos = pygame.Vector2(self.target)
+        return True
+
+    def draw(self, screen, font):
+        glow_surf = pygame.Surface((80, 80), pygame.SRCALPHA)
+        pygame.draw.circle(glow_surf, (*self.color, 40), (40, 40), 35)
+        screen.blit(glow_surf, (self.pos.x - 40, self.pos.y - 40))
+        pts = []
+        for i in range(6):
+            a = math.radians(self.angle + i * 60)
+            pts.append((self.pos.x + 25 * math.cos(a), self.pos.y - 25 * math.sin(a)))
+        pygame.draw.polygon(screen, self.color, pts)
+        pygame.draw.polygon(screen, (255, 255, 255), pts, 2)
+        eye_x = self.pos.x + 12 * math.cos(math.radians(self.angle))
+        eye_y = self.pos.y - 12 * math.sin(math.radians(self.angle))
+        pygame.draw.circle(screen, (255, 255, 255), (int(eye_x), int(eye_y)), 5)
+        if self.payload:
+            lbl = font.render(str(self.payload), True, (255, 255, 255))
+            screen.blit(lbl, (self.pos.x - 40, self.pos.y - 65))
+
+def draw_shelf(screen, x, y, title, font, count):
+    pygame.draw.rect(screen, COLORS["shelf_frame"], (x, y, 320, 95), 4, border_radius=5)
+    pygame.draw.line(screen, COLORS["shelf_frame"], (x, y + 47), (x + 320, y + 47), 2)
+    for i in range(16):
+        row = i // 8  # 0 for top row, 1 for bottom row
+        col = i % 8
+        box_x = x + 10 + col * 38
+        box_y = y + 8 if row == 0 else y + 55
+        
+        if i < count:
+            # Filled slot = ORANGE
+            color = (255, 140, 0) 
+            pygame.draw.rect(screen, color, (box_x, box_y, 30, 25), border_radius=3)
+        else:
+            # Empty slot = BLANK (dark outline)
+            pygame.draw.rect(screen, (25, 28, 35), (box_x, box_y, 30, 25), border_radius=3)
+            pygame.draw.rect(screen, COLORS["shelf_frame"], (box_x, box_y, 30, 25), 1, border_radius=3)
+
+    screen.blit(font.render(title, True, COLORS["accent"]), (x + 5, y - 22))
+
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("CYBER-LOGISTICS ULTRA-WIDE v14.5")
+    clock = pygame.time.Clock()
+    f_main = pygame.font.SysFont("Agency FB", 40, bold=True)
+    f_ui = pygame.font.SysFont("Calibri", 17, bold=True)
+
     try:
-        # Note: Ensure your CSV headers are 'ItemName' and 'Category'
         df = pd.read_csv('load.csv', encoding='utf-8-sig')
-        tasks = df.to_dict('records')
-    except:
-        print("❌ File 'load.csv' is required to run!")
-        return
+        df.columns = df.columns.str.strip()
+        df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+        all_items = df.to_dict('records')
+        shipping_list = [i for i in all_items if i['Category'] != "Damaged items"]
+    except Exception as e:
+        print(f"Error: {e}"); return
 
-    robot = Robot(INBOUND_POS[0], INBOUND_POS[1])
-    task_index = 0
-    done = False
+    sorter = Robot(POS_REST_SORTER[0], POS_REST_SORTER[1], COLORS["sorter"], 7, "SORTER")
+    deliverer = Robot(POS_REST_DELIVERER[0], POS_REST_DELIVERER[1], COLORS["deliverer"], 10, "DELIVERY")
+    
+    sort_idx, ship_idx, revenue = 0, 0, 0
+    ready_to_ship, logs = [], ["> SYSTEM WIDENED", "> ENCLOSED BAYS ACTIVE"]
+    inventory_counts = {cat: 0 for cat in SHELF_MAP}
 
     while True:
-        screen.fill(WHITE)
-        
-        # Draw loading station and shelves
-        pygame.draw.rect(screen, (0, 200, 0), (50, 250, 100, 100), 2)
-        for cat, pos in SHELF_LOCATIONS.items():
-            pygame.draw.rect(screen, SHELF_COLOR, (pos[0], pos[1], 160, 60))
-            screen.blit(font.render(cat, True, WHITE), (pos[0] + 5, pos[1] + 20))
+        screen.fill(COLORS["bg"])
+        for x in range(0, WIDTH, 60):
+            for y in range(0, HEIGHT, 60):
+                pygame.draw.rect(screen, COLORS["grid"], (x, y, 60, 60), 1)
 
-        # AUTOMATIC LOGIC (No manual input required)
-        if task_index < len(tasks):
-            current_task = tasks[task_index]
-            
-            if robot.state == "GET_TASK":
-                robot.target = pygame.Vector2(INBOUND_POS)
-                if (robot.target - robot.pos).length() < 5:
-                    robot.carrying = current_task['ItemName']
-                    # Default to middle of screen if category is not found
-                    dest = SHELF_LOCATIONS.get(current_task['Category'], (500, 300))
-                    robot.target = pygame.Vector2(dest)
-                    robot.state = "TO_SHELF"
-            
-            elif robot.state == "TO_SHELF":
-                if (robot.target - robot.pos).length() < 5:
-                    print(f"📦 Successfully stored: {current_task['ItemName']}")
-                    robot.carrying = None
-                    task_index += 1
-                    robot.state = "GET_TASK"
+        # 1. HEADER
+        pygame.draw.rect(screen, (20, 22, 28), (0, 0, WIDTH, 80))
+        pygame.draw.line(screen, COLORS["accent"], (0, 80), (WIDTH, 80), 3)
+        screen.blit(f_main.render("CYBER-WAREHOUSE LOGISTICS PRO", True, COLORS["accent"]), (40, 18))
+        screen.blit(f_main.render(f"BANK: ${revenue:,.0f}", True, COLORS["money"]), (WIDTH - 350, 18))
+
+        # 2. ZONES (BÊN TRÁI)
+        pygame.draw.rect(screen, COLORS["inbound"], (POS_INBOUND[0]-70, POS_INBOUND[1]-70, 140, 140), 3, border_radius=15)
+        screen.blit(f_ui.render("INBOUND", True, COLORS["inbound"]), (POS_INBOUND[0]-40, POS_INBOUND[1]-95))
+        pygame.draw.rect(screen, COLORS["gate"], (POS_GATE[0]-70, POS_GATE[1]-70, 140, 140), 3, border_radius=15)
+        screen.blit(f_ui.render("DELIVERY", True, COLORS["gate"]), (POS_GATE[0]-40, POS_GATE[1]-95))
+
+        # 3. SHELVES (BÊN PHẢI)
+        for cat, y_pos in SHELF_MAP.items():
+            draw_shelf(screen, SHELF_X, y_pos, cat, f_ui, inventory_counts[cat])
+
+        # 4. ENCLOSED CHARGING STATION (LAYER 1 - NỀN)
+        station_x, station_y = 420, 600
+        pygame.draw.rect(screen, (30, 35, 45), (station_x, station_y, 450, 180), border_radius=20)
+        pygame.draw.rect(screen, (20, 20, 25), (460, 635, 80, 80), border_radius=10) # Slot 1
+        pygame.draw.rect(screen, (20, 20, 25), (680, 635, 80, 80), border_radius=10) # Slot 2
+
+        # 5. ROBOTS (VẼ GIỮA CÁC LỚP TRẠM SẠC)
+        # Logic di chuyển
+        if sort_idx < len(all_items):
+            current = all_items[sort_idx]
+            if sorter.state in ["IDLE", "RESTING"]: sorter.state = "NAV_PICKUP"
+            if sorter.state == "NAV_PICKUP":
+                sorter.target = pygame.Vector2(POS_INBOUND)
+                if sorter.move():
+                    sorter.payload = current['ItemName']
+                    sorter.target = pygame.Vector2(SHELF_X - 50, SHELF_MAP[current['Category']] + 47)
+                    sorter.state = "NAV_SHELF"
+            elif sorter.state == "NAV_SHELF":
+                if sorter.move():
+                    logs.append(f"> STORED: {sorter.payload}")
+                    inventory_counts[current['Category']] += 1
+                    if current['Category'] != "Damaged items": ready_to_ship.append(current['ItemID'])
+                    sorter.payload = None; sort_idx += 1; sorter.state = "NAV_PICKUP"
         else:
-            done = True
-            robot.target = pygame.Vector2(50, 50) # Return to home/rest station
+            sorter.target = pygame.Vector2(POS_REST_SORTER)
+            if sorter.move(): sorter.state = "RESTING"
 
-        # Robot Movement logic
-        if (robot.target - robot.pos).length() > 0:
-            move_vec = (robot.target - robot.pos).normalize() * robot.speed
-            robot.pos += move_vec
+        if ship_idx < len(shipping_list):
+            ship_item = shipping_list[ship_idx]
+            if ship_item['ItemID'] in ready_to_ship:
+                if deliverer.state in ["IDLE", "RESTING"]: deliverer.state = "NAV_SHELF"
+                if deliverer.state == "NAV_SHELF":
+                    deliverer.target = pygame.Vector2(SHELF_X - 50, SHELF_MAP[ship_item['Category']] + 47)
+                    if deliverer.move():
+                        deliverer.payload = ship_item['ItemName']
+                        inventory_counts[ship_item['Category']] -= 1
+                        deliverer.target = pygame.Vector2(POS_GATE)
+                        deliverer.state = "NAV_GATE"
+                elif deliverer.state == "NAV_GATE":
+                    if deliverer.move():
+                        revenue += ship_item['Price']; logs.append(f"> SHIPPED: {deliverer.payload}")
+                        deliverer.payload = f"CASH: ${ship_item['Price']}"
+                        deliverer.target = pygame.Vector2(WIDTH//2, 40); deliverer.state = "DEPOSIT"
+                elif deliverer.state == "DEPOSIT":
+                    if deliverer.move():
+                        deliverer.payload = None; ship_idx += 1; deliverer.state = "NAV_SHELF"
+            else:
+                deliverer.target = pygame.Vector2(POS_REST_DELIVERER)
+                if deliverer.move(): deliverer.state = "RESTING"
+        else:
+            deliverer.target = pygame.Vector2(POS_REST_DELIVERER)
+            if deliverer.move(): deliverer.state = "RESTING"
 
-        # Draw Robot
-        pygame.draw.circle(screen, ROBOT_COLOR, (int(robot.pos.x), int(robot.pos.y)), 20)
-        if robot.carrying:
-            screen.blit(font.render(robot.carrying, True, (200, 0, 0)), (robot.pos.x - 20, robot.pos.y - 40))
+        sorter.draw(screen, f_ui)
+        deliverer.draw(screen, f_ui)
 
-        if done:
-            screen.blit(font.render("ALL ITEMS PROCESSED!", True, (0, 150, 0)), (400, 300))
+        # 6. CHARGING STATION (LAYER 2 - VÁCH NGĂN & CHỮ)
+        # Vách ngăn cơ khí che một phần robot
+        pygame.draw.rect(screen, COLORS["bay_wall"], (450, 625, 10, 100))
+        pygame.draw.rect(screen, COLORS["bay_wall"], (550, 625, 10, 100))
+        pygame.draw.rect(screen, COLORS["bay_wall"], (670, 625, 10, 100))
+        pygame.draw.rect(screen, COLORS["bay_wall"], (770, 625, 10, 100))
+        pygame.draw.rect(screen, COLORS["accent"], (station_x, station_y, 450, 180), 2, border_radius=20)
+        screen.blit(f_ui.render("ROBOT CHARGING STATION", True, COLORS["accent"]), (station_x + 20, station_y + 10))
+        
+        # Bảng trạng thái robot đẩy xuống dưới hộc sạc
+        def draw_status_box(x, y, robot, color):
+            pygame.draw.rect(screen, (15, 17, 22), (x, y, 180, 45), border_radius=8)
+            pygame.draw.rect(screen, color, (x, y, 180, 45), 1, border_radius=8)
+            screen.blit(f_ui.render(f"{robot.name}: {robot.state}", True, color), (x + 10, y + 12))
+
+        draw_status_box(455, 725, sorter, COLORS["sorter"])
+        draw_status_box(675, 725, deliverer, COLORS["deliverer"])
+
+        # 7. LOG PANEL (BÊN PHẢI DƯỚI)
+        log_rect = pygame.Rect(WIDTH - 380, 680, 360, 100)
+        pygame.draw.rect(screen, (10, 10, 15), log_rect, border_radius=15)
+        pygame.draw.rect(screen, COLORS["accent"], log_rect, 1, border_radius=15)
+        for i, log in enumerate(logs[-4:]):
+            screen.blit(f_ui.render(log, True, (150, 160, 170)), (WIDTH - 365, 690 + i*20))
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit(); sys.exit()
-
-        pygame.display.flip()
-        clock.tick(60)
+            if event.type == pygame.QUIT: pygame.quit(); sys.exit()
+        pygame.display.flip(); clock.tick(60)
 
 if __name__ == "__main__":
-    run_simulation()
+    main()
