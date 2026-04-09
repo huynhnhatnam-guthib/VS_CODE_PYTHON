@@ -75,23 +75,11 @@ Start: Click the green "START SYSTEM" button.
 
 Simulation: The UI transitions to the warehouse floor. Robots will leave the Docking Station to execute your plan.
 
-Monitor: Watch the top-right corner to see your Bank grow as the Deliverer completes shipments.
+Monitor: Watch the top-right corner to see your networth grow as the Deliverer completes shipments.
 
- 7. Contribution:
 
-Contributions make the open-source community an amazing place to learn and create.
 
-Fork the Project
-
-Create your Feature Branch (git checkout -b feature/AmazingFeature)
-
-Commit your Changes (git commit -m 'Add some AmazingFeature')
-
-Push to the Branch (git push origin feature/AmazingFeature)
-
-Open a Pull Request
-
- 8. Authors
+ 7. Authors
 
 Tạ Hiếu Đông - System Design - GitHub Profile: https://github.com/lhtk33
 
@@ -99,7 +87,7 @@ Trần Võ Minh Khang - Robot Logic - GitHub Profile: https://github.com/khangmi
 
 Huỳnh Nhật Nam - UI/UX Development - GitHub Profile: https://github.com/huynhnhatnam-guthib
 
- 9. Acknowledgements
+ 8. Acknowledgements
 
 Pygame Community: For the robust 2D engine.
 
@@ -109,7 +97,7 @@ Gemini (AI Collaborator): For assisting in state machine logic refinement.
 
 Cyberpunk Aesthetics: Inspiration for the high-contrast color palette.
 
- 10. License
+ 9. License
 
 This project is licensed under the MIT License.
 
@@ -128,21 +116,6 @@ copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
- 11. Changelog & Release Notes
-
-v17.0 (2025-04-09)
-Added: Full Planner Mode screen for task prioritization.
-
-Added: State Machine transition logic (Planning → Execution).
-
-Improved: UI layout with blurred background overlay.
-
-Fixed: Robot navigation conflicts during multi-item assignments.
-
-v16.5 (2025-04-07)
-Fixed: Live revenue tracker bugs.
-
-Improved: Robot movement physics (smooth rotation/acceleration).
 
 If you find this project useful, please share it for everyone
 <img width="1529" height="816" alt="image" src="https://github.com/user-attachments/assets/b312df5b-2351-43d6-b82c-8bcc4dd2e0f8" />
