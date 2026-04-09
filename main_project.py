@@ -150,7 +150,7 @@ def main():
         pygame.draw.rect(screen, (20, 20, 25), (460, 635, 80, 80), border_radius=10) # Slot 1
         pygame.draw.rect(screen, (20, 20, 25), (680, 635, 80, 80), border_radius=10) # Slot 2
 
-        # 5. ROBOTS (VẼ GIỮA CÁC LỚP TRẠM SẠC)
+        # 5. ROBOTS 
         # Logic di chuyển
         if sort_idx < len(all_items):
             current = all_items[sort_idx]
@@ -186,7 +186,8 @@ def main():
                     if deliverer.move():
                         revenue += ship_item['Price']; logs.append(f"> SHIPPED: {deliverer.payload}")
                         deliverer.payload = f"CASH: ${ship_item['Price']}"
-                        deliverer.target = pygame.Vector2(WIDTH//2, 40); deliverer.state = "DEPOSIT"
+                        deliverer.target = pygame.Vector2(POS_GATE); 
+                        deliverer.state = "DEPOSIT"
                 elif deliverer.state == "DEPOSIT":
                     if deliverer.move():
                         deliverer.payload = None; ship_idx += 1; deliverer.state = "NAV_SHELF"
