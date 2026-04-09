@@ -1,8 +1,8 @@
 ItemID,ItemName,Category,Price,Quantity, Destination
 IP20PM,Iphone 20 Pro Max,Electronics,55000000,10,Ho Chi Minh 
 INK01,Printer ink,Consumables,850000,30,Ho Chi Minh 
-LG-MON,LG monitor,Damaged items,4500000,2
-M-OUTFIT,Maid outfit,Damaged items,500000,10
+LG-MON,LG monitor,Damaged items,4500000,2, Ha Noi
+M-OUTFIT,Maid outfit,Damaged items,500000,10, USA
 GS30U,Galaxy S30 Ultra,Electronics,48000000,12,Japan
 MBM10,Macbook M10,Electronics,85000000,5,Ho Chi Minh
 KG01,Kho Ga de tem,Food and Drink,150000,100, Cao Bang
@@ -12,4 +12,4 @@ TBL01,Table,Furniture,3500000,10,Nghe An
 BKC01,Bookcase,Furniture,5000000,8,Ha Noi
 T3M,Tape 3M,Consumables,25000,500,Nha Trang
 BATT01,Batteries,Consumables,15000,1000,Nam Dinh
-G-MOUSE,Gaming mouse,Damaged items,1200000,5
+G-MOUSE,Gaming mouse,Damaged items,1200000,5, Tay Ninh
