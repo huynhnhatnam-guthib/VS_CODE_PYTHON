@@ -85,11 +85,11 @@ Push to the Branch (git push origin feature/AmazingFeature)
 Open a Pull Request
 
  6. Authors
-Tạ Hiếu Đông - System Design - GitHub Profile
+Tạ Hiếu Đông - System Design - GitHub Profile: https://github.com/lhtk33
 
-Trần Võ Minh Khang - Robot Logic - https://github.com/khangminh1312
+Trần Võ Minh Khang - Robot Logic - GitHub Profile: https://github.com/khangminh1312
 
-Huỳnh Nhật Nam - UI/UX Development - GitHub Profile
+Huỳnh Nhật Nam - UI/UX Development - GitHub Profile: https://github.com/huynhnhatnam-guthib
 
  7. Acknowledgements
 Pygame Community: For the robust 2D engine.
