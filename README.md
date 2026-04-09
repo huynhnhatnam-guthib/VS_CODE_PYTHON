@@ -10,7 +10,6 @@ Task Prioritization: Allows users to define the specific sequence of goods to be
 
 Automated Sorting: Categorizing goods into specific storage zones based on type.
 
-Dynamic Delivery: Users can monitor inventory states and trigger automatic delivery to the shipping gate.
 
  3. Key Features
 
@@ -61,6 +60,7 @@ ItemID,ItemName,Category,Price
 -Run the Application:
 Bash
 python main.py
+ 
  6. Usage Guide
 
 Step 1: Planning Mode
@@ -85,7 +85,7 @@ Tạ Hiếu Đông - System Design - GitHub Profile: https://github.com/lhtk33
 
 Trần Võ Minh Khang - Robot Logic - GitHub Profile: https://github.com/khangminh1312
 
-Huỳnh Nhật Nam - UI/UX Development - GitHub Profile: https://github.com/huynhnhatnam-guthib
+Huỳnh Nhật Nam - UI/UX and process development - GitHub Profile: https://github.com/huynhnhatnam-guthib
 
  8. Acknowledgements
 
@@ -117,7 +117,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 
-If you find this project useful, please share it for everyone
+If you find this project useful, please share it with everyone
 <img width="1529" height="816" alt="image" src="https://github.com/user-attachments/assets/b312df5b-2351-43d6-b82c-8bcc4dd2e0f8" />
 
 
