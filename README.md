@@ -1,7 +1,9 @@
  1. Cyber-Logistics Operational Robots
+
 Welcome to the Cyber-Logistics Operational Robots repository. This project is a reliable warehouse automation simulation built with Python and the Pygame library. It features a complex multi-agent system where specialized autonomous robots handle sorting, shelving, and delivery based on a priority order defined by the user.
 
  2. Purpose
+
 The primary goal of this program is to illustrate multi-agent processing. It solves multiple task efficiency throughput by:
 
 Task Prioritization: Allows users to define the specific sequence of goods to be processed.
@@ -11,6 +13,7 @@ Automated Sorting: Categorizing goods into specific storage zones based on type.
 Dynamic Delivery: Users can monitor inventory states and trigger automatic delivery to the shipping gate.
 
  3. Key Features
+
 Strategic Planning: Arrange goods' priority sequence in the initial "Planning Mode" screen.
 
 Autonomous Multi-Agent System:
@@ -26,14 +29,15 @@ Real-time Analytics: Track bank revenue and live robot states (Resting, Navigati
 Visual Excellence: High-contrast Cyberpunk UI with flow effects and intuitive status panels.
 
  4. System Requirements
-Software
+
+Software:
 Programming Language: Python 3.8 or higher
 
 Libraries: pygame (v2.0.0+), pandas
 
 OS: Windows, Linux, or MacOS
 
-Hardware
+Hardware:
 Processor: Any modern dual-core CPU
 
 Memory: Minimum 4GB RAM (8GB recommended)
@@ -41,6 +45,7 @@ Memory: Minimum 4GB RAM (8GB recommended)
 Graphics: Integrated graphics supporting OpenGL
 
  5. Installation
+
 -Clone the Repository:
 Bash
 git clone https://github.com/your-username/cyber-logistics.git
@@ -57,6 +62,7 @@ ItemID,ItemName,Category,Price
 Bash
 python main.py
  6. Usage Guide
+
 Step 1: Planning Mode
 Upon launching, the system starts in Planning Mode.
 
@@ -71,7 +77,8 @@ Simulation: The UI transitions to the warehouse floor. Robots will leave the Doc
 
 Monitor: Watch the top-right corner to see your Bank grow as the Deliverer completes shipments.
 
- 5. Contribution:
+ 7. Contribution:
+
 Contributions make the open-source community an amazing place to learn and create.
 
 Fork the Project
@@ -84,14 +91,16 @@ Push to the Branch (git push origin feature/AmazingFeature)
 
 Open a Pull Request
 
- 6. Authors
+ 8. Authors
+
 Tạ Hiếu Đông - System Design - GitHub Profile: https://github.com/lhtk33
 
 Trần Võ Minh Khang - Robot Logic - GitHub Profile: https://github.com/khangminh1312
 
 Huỳnh Nhật Nam - UI/UX Development - GitHub Profile: https://github.com/huynhnhatnam-guthib
 
- 7. Acknowledgements
+ 9. Acknowledgements
+
 Pygame Community: For the robust 2D engine.
 
 Pandas Team: For simplifying inventory management.
@@ -100,7 +109,8 @@ Gemini (AI Collaborator): For assisting in state machine logic refinement.
 
 Cyberpunk Aesthetics: Inspiration for the high-contrast color palette.
 
- 8. License
+ 10. License
+
 This project is licensed under the MIT License.
 
 Copyright (c) 2026
@@ -118,7 +128,8 @@ copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
- 9. Changelog & Release Notes
+ 11. Changelog & Release Notes
+
 v17.0 (2025-04-09)
 Added: Full Planner Mode screen for task prioritization.
 
