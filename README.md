@@ -46,24 +46,32 @@ Graphics: Integrated graphics supporting OpenGL
  5. Installation
 
 -Clone the Repository:
+
 Bash
 git clone https://github.com/your-username/cyber-logistics.git
 cd cyber-logistics
+
 -Install Dependencies:
+
 Bash
 pip install pygame pandas
 Prepare Database:
+
 -Ensure a file with a form of .csv exists in the root directory with the following structure:
+
 ItemID,ItemName,Category,Price
 101,Smartphone,Electronics,500
 102,Office Chair,Furniture,150
+
 -Run the Application:
+
 Bash
 python main.py
  
  6. Usage Guide
 
 Step 1: Planning Mode
+
 Upon launching, the system starts in Planning Mode.
 
 Select Items: Click buttons in the Available Items panel. Selected items will appear in the Current Plan list on the right.
@@ -71,6 +79,7 @@ Select Items: Click buttons in the Available Items panel. Selected items will ap
 Review: Verify the sequence to ensure high-priority goods are at the top.
 
 Step 2: Execution Mode
+
 Start: Click the green "START SYSTEM" button.
 
 Simulation: The UI transitions to the warehouse floor. Robots will leave the Docking Station to execute your plan.
